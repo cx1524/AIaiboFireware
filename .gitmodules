@@ -1,0 +1,6 @@
+[submodule "Middlewares/CherryUSB"]
+	path = Middlewares/CherryUSB
+	url = https://github.com/cherry-embedded/CherryUSB.git
+[submodule "Middlewares/CMSIS"]
+	path = Middlewares/CMSIS
+	url = https://github.com/ARM-software/CMSIS_6.git
