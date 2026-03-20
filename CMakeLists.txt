@@ -22,9 +22,27 @@ set(FIRMWARE_TARGET "${PROJECT_NAME}.elf")
 
 set(PLACEHOLDER_PREFIX "^__PLACEHOLDER_")
 
+set(MIDDLEWARES_INCLUDE_DIRS
+"Middlewares/CMSIS/CMSIS/Core/Include"
+"Middlewares/CMSIS/CMSIS/Core/Include/m-profile"
+"Middlewares/CherryUSB/class/cdc"
+"Middlewares/CherryUSB/common"
+"Middlewares/CherryUSB/core"
+)
+
+set(DRIVER_INCLUDE_DIRS
+"driver/include/"
+)
+
+set(USER_INCLUDE_DIRS
+"src/config/include"
+"src/prot"
+"src"
+)
+
 set(USER_SOURCES
-    "__PLACEHOLDER_SOURCE_1__"
-    "__PLACEHOLDER_SOURCE_2__"
+"src/main.c"
+"src/prot/usb_dc.c"
 )
 
 set(USER_DEFINITIONS
@@ -38,17 +56,19 @@ set(USER_COMPILE_OPTIONS
 )
 
 set(USER_LINK_OPTIONS
-    "__PLACEHOLDER_LINK_OPTION_1__"
-    "__PLACEHOLDER_LINK_OPTION_2__"
+    "-Wl,--gc-sections"
+    "-Wl,--print-memory-usage"
+    "-Wl,-Map=${CMAKE_BINARY_DIR}/${FIRMWARE_TARGET}.map"
+    "-specs=nosys.specs"
 )
 
 set(USER_LINK_LIBRARIES
     "__PLACEHOLDER_LINK_LIBRARY_1__"
-    "__PLACEHOLDER_LINK_LIBRARY_2__"
 )
 
-set(USER_LINKER_SCRIPT "__PLACEHOLDER_LINKER_SCRIPT__")
+set(USER_LINKER_SCRIPT "driver/linkscript/apm32f402_403xb_flash.ld")
 
+# Filter out placeholders
 list(FILTER USER_SOURCES EXCLUDE REGEX "${PLACEHOLDER_PREFIX}")
 list(FILTER USER_INCLUDE_DIRS EXCLUDE REGEX "${PLACEHOLDER_PREFIX}")
 list(FILTER USER_DEFINITIONS EXCLUDE REGEX "${PLACEHOLDER_PREFIX}")
@@ -64,6 +84,14 @@ target_sources(${FIRMWARE_TARGET} PRIVATE "${CMAKE_PLACEHOLDER_SOURCE}")
 
 if(USER_SOURCES)
     target_sources(${FIRMWARE_TARGET} PRIVATE ${USER_SOURCES})
+endif()
+
+if(MIDDLEWARES_INCLUDE_DIRS)
+    target_include_directories(${FIRMWARE_TARGET} PRIVATE ${MIDDLEWARES_INCLUDE_DIRS})
+endif()
+
+if(DRIVER_INCLUDE_DIRS)
+    target_include_directories(${FIRMWARE_TARGET} PRIVATE ${DRIVER_INCLUDE_DIRS})
 endif()
 
 if(USER_INCLUDE_DIRS)
