@@ -36,30 +36,32 @@ set(DRIVER_INCLUDE_DIRS
 
 set(USER_INCLUDE_DIRS
 "src/config/include"
-"src/prot"
+"src/port"
 "src"
 )
 
 set(USER_SOURCES
 "src/main.c"
-"src/prot/usb_dc.c"
+"src/port/usb_dc.c"
+"Middlewares/CherryUSB/core/usbd_core.c"
+"Middlewares/CherryUSB/class/cdc/usbd_cdc_acm.c"
 )
 
 set(USER_DEFINITIONS
-    "__PLACEHOLDER_DEFINE_1__"
-    "__PLACEHOLDER_DEFINE_2__"
+    "APM32F402xx"
 )
 
 set(USER_COMPILE_OPTIONS
-    "__PLACEHOLDER_COMPILE_OPTION_1__"
-    "__PLACEHOLDER_COMPILE_OPTION_2__"
+    "-mcpu=cortex-m4"
+    "-mthumb"
+    "-mfloat-abi=hard"
 )
 
 set(USER_LINK_OPTIONS
     "-Wl,--gc-sections"
     "-Wl,--print-memory-usage"
     "-Wl,-Map=${CMAKE_BINARY_DIR}/${FIRMWARE_TARGET}.map"
-    "-specs=nosys.specs"
+    "--specs=nosys.specs"
 )
 
 set(USER_LINK_LIBRARIES
