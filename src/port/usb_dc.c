@@ -1,4 +1,5 @@
 #include "usbd_core.h"
+#include "device_cfg.h"
 
 /* Endpoint state */
 struct usb_dc_ep_state {
@@ -13,17 +14,18 @@ struct usb_dc_ep_state {
 /* Driver state */
 struct myusb_udc {
     volatile uint8_t dev_addr;
-    struct usb_dc_ep_state in_ep[CONFIG_USBDEV_EP_NUM];  /*!< IN endpoint parameters*/
-    struct usb_dc_ep_state out_ep[CONFIG_USBDEV_EP_NUM]; /*!< OUT endpoint parameters */
+    struct usb_dc_ep_state in_ep[16];  /*!< IN endpoint parameters*/
+    struct usb_dc_ep_state out_ep[16]; /*!< OUT endpoint parameters */
 } g_myusb_udc;
 
 __WEAK void usb_dc_low_level_init(void)
 {
-    
+    device_config();
 }
 
 __WEAK void usb_dc_low_level_deinit(void)
 {
+    device_deinit();
 }
 
 int usb_dc_init(uint8_t busid)
