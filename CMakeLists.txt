@@ -5,11 +5,11 @@ set(CMAKE_SYSTEM_PROCESSOR arm)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 if(NOT CMAKE_C_COMPILER)
-    set(CMAKE_C_COMPILER arm-none-eabi-gcc)
+    set(CMAKE_C_COMPILER "C:/Program Files/ArmTools/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gcc.exe")
 endif()
 
 if(NOT CMAKE_ASM_COMPILER)
-    set(CMAKE_ASM_COMPILER arm-none-eabi-gcc)
+    set(CMAKE_ASM_COMPILER "C:/Program Files/ArmTools/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gcc.exe")
 endif()
 
 project(AIaiboFirmware LANGUAGES C ASM)
@@ -43,8 +43,19 @@ set(USER_INCLUDE_DIRS
 set(USER_SOURCES
 "src/main.c"
 "src/port/usb_dc.c"
+"src/config/source/delay.c"
+"src/config/source/device_cfg.c"
 "Middlewares/CherryUSB/core/usbd_core.c"
 "Middlewares/CherryUSB/class/cdc/usbd_cdc_acm.c"
+)
+
+set(DRIVER_SOURCES
+"driver/src/apm32f402_403_gpio.c"
+"driver/src/apm32f402_403_misc.c"
+"driver/src/apm32f402_403_rcm.c"
+"driver/src/apm32f402_403_tmr.c"
+"driver/src/apm32f402_403_usb.c"
+"driver/src/system_apm32f402_403.c"
 )
 
 set(USER_DEFINITIONS
@@ -55,9 +66,15 @@ set(USER_COMPILE_OPTIONS
     "-mcpu=cortex-m4"
     "-mthumb"
     "-mfloat-abi=hard"
+    "-g"
+    "-O0"
 )
 
 set(USER_LINK_OPTIONS
+    "-mcpu=cortex-m4"
+    "-mthumb"
+    "-mfloat-abi=hard"
+    "-mfpu=fpv4-sp-d16"
     "-Wl,--gc-sections"
     "-Wl,--print-memory-usage"
     "-Wl,-Map=${CMAKE_BINARY_DIR}/${FIRMWARE_TARGET}.map"
@@ -68,7 +85,9 @@ set(USER_LINK_LIBRARIES
     "__PLACEHOLDER_LINK_LIBRARY_1__"
 )
 
-set(USER_LINKER_SCRIPT "driver/linkscript/apm32f402_403xb_flash.ld")
+set(USER_LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/driver/linkscript/apm32f402_403xb_flash.ld")
+
+set(USER_STARTUP_FILE "${CMAKE_SOURCE_DIR}/driver/start/startup_apm32f402_403.S")
 
 # Filter out placeholders
 list(FILTER USER_SOURCES EXCLUDE REGEX "${PLACEHOLDER_PREFIX}")
@@ -86,6 +105,14 @@ target_sources(${FIRMWARE_TARGET} PRIVATE "${CMAKE_PLACEHOLDER_SOURCE}")
 
 if(USER_SOURCES)
     target_sources(${FIRMWARE_TARGET} PRIVATE ${USER_SOURCES})
+endif()
+
+if(DRIVER_SOURCES)
+    target_sources(${FIRMWARE_TARGET} PRIVATE ${DRIVER_SOURCES})
+endif()
+
+if(USER_STARTUP_FILE)
+    target_sources(${FIRMWARE_TARGET} PRIVATE ${USER_STARTUP_FILE})
 endif()
 
 if(MIDDLEWARES_INCLUDE_DIRS)
