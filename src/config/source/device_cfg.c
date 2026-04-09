@@ -1,18 +1,19 @@
 #include "device_cfg.h"
 
-static void rcc_config(void);
+static void rcc_init(void);
 static void rcc_deinit(void);
-static void nvic_config(void);
+static void nvic_init(void);
 static void nvic_deinit(void);
-static void gpio_config(void);
+static void gpio_init(void);
 static void gpio_deinit(void);
 
 /* @brief configure USB device clock, NVIC and GPIO */
 void device_config(void)
 {
-    rcc_config();
-    nvic_config();
-    gpio_config();
+    //rcc_init();
+    //nvic_init();
+    delay_init_ms();
+    gpio_init();
 }
 
 void device_deinit(void)
@@ -22,7 +23,7 @@ void device_deinit(void)
     gpio_deinit();
 }
 
-void rcc_config(void)
+void rcc_init(void)
 {
     RCM_EnableAHBPeriphClock(RCM_AHB_PERIPH_OTGFS);
 }
@@ -32,7 +33,7 @@ void rcc_deinit(void)
     RCM_DisableAHBPeriphClock(RCM_AHB_PERIPH_OTGFS);
 }
 
-void nvic_config(void)
+void nvic_init(void)
 {
     NVIC_EnableIRQ(OTG_FS_IRQn);
 }
@@ -42,19 +43,20 @@ void nvic_deinit(void)
     NVIC_DisableIRQ(OTG_FS_IRQn);
 }
 
-void gpio_config(void)
+void gpio_init(void)
 {
     GPIO_Config_T gpio_init = {0};
 
-    RCM_EnableAHBPeriphClock(RCM_AHB_PERIPH_OTGFS);
+    RCM_EnableAPB2PeriphClock(RCM_APB2_PERIPH_GPIOB);
 
-    gpio_init.mode = GPIO_MODE_AF_PP;
-    gpio_init.pin  = GPIO_PIN_11 | GPIO_PIN_12;
+    // gpio_init.pin  = GPIO_PIN_11 | GPIO_PIN_12;
+    gpio_init.pin  = GPIO_PIN_6 | GPIO_PIN_7;
+    gpio_init.mode = GPIO_MODE_OUT_PP;
     gpio_init.speed = GPIO_SPEED_50MHz;
-    GPIO_Config(GPIOA, &gpio_init);
+    GPIO_Config(GPIOB, &gpio_init);
 }
 
 void gpio_deinit(void)
 {
-    GPIO_Reset(GPIOA);
+    GPIO_Reset(GPIOB);
 }
