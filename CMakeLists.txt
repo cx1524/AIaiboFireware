@@ -45,6 +45,7 @@ set(USER_SOURCES
 "src/port/usb_dc.c"
 "src/config/source/delay.c"
 "src/config/source/device_cfg.c"
+"src/config/source/usb_cfg.c"
 "Middlewares/CherryUSB/core/usbd_core.c"
 "Middlewares/CherryUSB/class/cdc/usbd_cdc_acm.c"
 )
