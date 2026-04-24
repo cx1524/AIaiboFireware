@@ -11,8 +11,6 @@ static void gpio_deinit(void);
 /* @brief configure USB device clock, NVIC and GPIO */
 void device_config(void)
 {
-    rcc_init();
-    nvic_init();
     delay_init_ms();
     gpio_init();
     usb_init();
@@ -20,29 +18,7 @@ void device_config(void)
 
 void device_deinit(void)
 {
-    rcc_deinit();
-    nvic_deinit();
     gpio_deinit();
-}
-
-void rcc_init(void)
-{
-    RCM_EnableAHBPeriphClock(RCM_AHB_PERIPH_OTGFS);
-}
-
-void rcc_deinit(void)
-{
-    RCM_DisableAHBPeriphClock(RCM_AHB_PERIPH_OTGFS);
-}
-
-void nvic_init(void)
-{
-    NVIC_EnableIRQ(OTG_FS_IRQn);
-}
-
-void nvic_deinit(void)
-{
-    NVIC_DisableIRQ(OTG_FS_IRQn);
 }
 
 void gpio_init(void)
