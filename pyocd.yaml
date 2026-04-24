@@ -1,0 +1,6 @@
+pack:
+  - pack/Geehy.APM32F4xx_DFP.1.0.11.pack
+
+target: APM32F402RB
+
+persist: true
