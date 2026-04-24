@@ -42,6 +42,7 @@ set(USER_INCLUDE_DIRS
 
 set(USER_SOURCES
 "src/main.c"
+"src/apm32f402_403_int.c"
 "src/port/usb_dc.c"
 "src/config/source/delay.c"
 "src/config/source/device_cfg.c"
@@ -56,6 +57,7 @@ set(DRIVER_SOURCES
 "driver/src/apm32f402_403_rcm.c"
 "driver/src/apm32f402_403_tmr.c"
 "driver/src/apm32f402_403_usb.c"
+"driver/src/apm32f402_403_usb_device.c"
 "driver/src/system_apm32f402_403.c"
 )
 
