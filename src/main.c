@@ -58,6 +58,8 @@ static const uint8_t device_quality_descriptor[] = {
     0x00,
 };
 
+USBD_HANDLE_T usbd_handle = {0};
+
 static const uint8_t *device_descriptor_callback(uint8_t speed)
 {
     return device_descriptor;
@@ -173,12 +175,17 @@ void cdc_acm_init(uint8_t busid, uintptr_t reg_base)
 char buffer[] = "Hello World!\r\n";
 
 int main(void) {
-    device_config();
     cdc_acm_init(0, 0);
+
+    while (!usb_device_is_configured(0));
 
     while (1)
     {
-        usbd_cdc_acm_bulk_in(0, CDC_IN_EP, strlen(buffer));
+        if (ep_tx_busy_flag)
+        {
+            ep_tx_busy_flag = true;
+            usbd_ep_start_write(0, CDC_OUT_EP, buffer, strlen(buffer));
+        }
         GPIO_SetBit(GPIOB, GPIO_PIN_6);
         GPIO_SetBit(GPIOB, GPIO_PIN_7);
         delay_ms(500);
@@ -187,3 +194,9 @@ int main(void) {
         delay_ms(500);
     }
 }
+
+void usb_dc_low_level_init(void)
+{
+    device_config();
+}
+
