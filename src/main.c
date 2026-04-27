@@ -1,9 +1,10 @@
-#include "usbd_core.h"
-#include "usbd_cdc_acm.h"
-
 #include "device_cfg.h"
 #include <stdio.h>
 #include <string.h>
+
+#if defined (USE_USB)
+#include "usbd_core.h"
+#include "usbd_cdc_acm.h"
 
 volatile bool ep_tx_busy_flag = false;
 
@@ -172,9 +173,16 @@ void cdc_acm_init(uint8_t busid, uintptr_t reg_base)
     usbd_initialize(busid, reg_base, usbd_event_handler);
 }
 
+void usb_dc_low_level_init(void)
+{
+    device_config();
+}
+#endif
+
 char buffer[] = "Hello World!\r\n";
 
 int main(void) {
+#if defined (USE_USB)
     cdc_acm_init(0, 0);
 
     while (!usb_device_is_configured(0));
@@ -193,10 +201,5 @@ int main(void) {
         GPIO_ResetBit(GPIOB, GPIO_PIN_7);
         delay_ms(500);
     }
+#endif
 }
-
-void usb_dc_low_level_init(void)
-{
-    device_config();
-}
-
