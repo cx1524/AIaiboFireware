@@ -42,9 +42,9 @@ _ram_size = 0x00008000;
 /* Stack / Heap Configuration */
 _end_stack = 0x20008000;
 /* Heap Size (in Bytes) */
-_heap_size = 0x200;
+_heap_size = 0x0;
 /* Stack Size (in Bytes) */
-_stack_size = 0x400;
+_stack_size = 0x200;
 
 MEMORY
 {

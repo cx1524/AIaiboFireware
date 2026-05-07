@@ -19,13 +19,13 @@ if %ERRORLEVEL% neq 0 (
     exit /b %ERRORLEVEL%
 )
 echo [Configuration complete.]
-goto end
+exit /b 0
 
 :build
 echo [Building firmware...]
 if not exist "%BUILD_DIR%" (
     echo [Build directory not found, configuring...]
-    goto config
+    call :config
 )
 cmake --build "%BUILD_DIR%"
 if %ERRORLEVEL% neq 0 (

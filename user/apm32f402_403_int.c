@@ -38,8 +38,9 @@
 /* Private function prototypes ********************************************/
 
 /* External variables *****************************************************/
-
+#if defined(USE_USB)
 extern USBD_HANDLE_T usbd_handle;
+#endif
 
 /* External functions *****************************************************/
 
@@ -120,18 +121,6 @@ void UsageFault_Handler(void)
 }
 
 /*!
- * @brief     This function handles SVCall exception
- *
- * @param     None
- *
- * @retval    None
- *
- */
-void SVC_Handler(void)
-{
-}
-
-/*!
  * @brief     This function handles Debug Monitor exception
  *
  * @param     None
@@ -143,30 +132,7 @@ void DebugMon_Handler(void)
 {
 }
 
-/*!
- * @brief     This function handles PendSV_Handler exception
- *
- * @param     None
- *
- * @retval    None
- *
- */
-void PendSV_Handler(void)
-{
-}
-
-/*!
- * @brief     This function handles SysTick Handler
- *
- * @param     None
- *
- * @retval    None
- *
- */
-void SysTick_Handler(void)
-{
-}
-
+#if defined(USE_USB)
 /*!
  * @brief   This function handles USB FS Handler
  *
@@ -177,5 +143,6 @@ void SysTick_Handler(void)
  */
 void OTG_FS_IRQHandler(void)
 {
-    USBD_OTG_IsrHandler(&usbd_handle);
+    USBD_OTG_IsrHandler((USBD_HANDLE_T *)&usbd_handle);
 }
+#endif

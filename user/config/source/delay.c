@@ -1,6 +1,4 @@
 #include "delay.h"
-#include "apm32f402_403_tmr.h"
-#include "apm32f402_403_rcm.h"
 
 void delay_init_ms(void)
 {

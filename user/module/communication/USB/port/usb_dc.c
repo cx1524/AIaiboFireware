@@ -1,5 +1,9 @@
+#define USE_USB
+#if defined(USE_USB)
 #include "usbd_core.h"
-#include "device_cfg.h"
+#include "usb_reg.h"
+
+usb_device_t g_usb_device;
 
 /* Endpoint state */
 struct usb_dc_ep_state {
@@ -9,6 +13,7 @@ struct usb_dc_ep_state {
     uint8_t *xfer_buf;
     uint32_t xfer_len;
     uint32_t actual_xfer_len;
+    uint8_t ep_enable;
 };
 
 /* Driver state */
@@ -20,17 +25,21 @@ struct myusb_udc {
 
 __WEAK void usb_dc_low_level_init(void)
 {
-    device_config();
 }
 
 __WEAK void usb_dc_low_level_deinit(void)
 {
-    device_deinit();
 }
 
 int usb_dc_init(uint8_t busid)
 {
     memset(&g_myusb_udc, 0, sizeof(struct myusb_udc));
+
+    g_usb_device.device_reg = (usb_device_reg_t *)USB_D_BASE;
+    for (int i = 0; i < 4; i++) {
+        g_usb_device.in_ep[i] = ((usb_in_ep_t *)(USB_D_IN_EP0_BASE + (i * 0x20)));
+        g_usb_device.out_ep[i] = ((usb_out_ep_t *)(USB_D_OUT_EP0_BASE + (i * 0x20)));
+    }
 
     usb_dc_low_level_init();
     return 0;
@@ -126,3 +135,4 @@ int usbd_ep_start_read(uint8_t busid, const uint8_t ep, uint8_t *data, uint32_t 
 void USBD_IRQHandler(uint8_t busid)
 {
 }
+#endif

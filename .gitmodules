@@ -4,3 +4,6 @@
 [submodule "Middlewares/CMSIS"]
 	path = Middlewares/CMSIS
 	url = https://github.com/ARM-software/CMSIS_6.git
+[submodule "Middlewares/FreeRTOS"]
+	path = Middlewares/FreeRTOS
+	url = https://github.com/FreeRTOS/FreeRTOS.git

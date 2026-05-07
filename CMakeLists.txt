@@ -5,11 +5,11 @@ set(CMAKE_SYSTEM_PROCESSOR arm)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 if(NOT CMAKE_C_COMPILER)
-    set(CMAKE_C_COMPILER "C:/Program Files/ArmTools/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gcc.exe")
+    set(CMAKE_C_COMPILER "arm-none-eabi-gcc.exe")
 endif()
 
 if(NOT CMAKE_ASM_COMPILER)
-    set(CMAKE_ASM_COMPILER "C:/Program Files/ArmTools/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gcc.exe")
+    set(CMAKE_ASM_COMPILER "arm-none-eabi-gcc.exe")
 endif()
 
 project(AIaiboFirmware LANGUAGES C ASM)
@@ -28,6 +28,8 @@ set(MIDDLEWARES_INCLUDE_DIRS
 "Middlewares/CherryUSB/class/cdc"
 "Middlewares/CherryUSB/common"
 "Middlewares/CherryUSB/core"
+"Middlewares/FreeRTOS/FreeRTOS/Source/include"
+"Middlewares/FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM4F"
 )
 
 set(DRIVER_INCLUDE_DIRS
@@ -35,20 +37,33 @@ set(DRIVER_INCLUDE_DIRS
 )
 
 set(USER_INCLUDE_DIRS
-"src/config/include"
-"src/port"
-"src"
+"user/config/include"
+"user/module/communication"
+"user/module/communication/USB"
+"user/module/communication/USB/port"
+"user/tasks"
+"user"
 )
 
 set(USER_SOURCES
-"src/main.c"
-"src/apm32f402_403_int.c"
-"src/port/usb_dc.c"
-"src/config/source/delay.c"
-"src/config/source/device_cfg.c"
-"src/config/source/usb_cfg.c"
+"user/main.c"
+"user/apm32f402_403_int.c"
+"user/config/source/delay.c"
+"user/config/source/device_cfg.c"
+"user/module/communication/comm_interface.c"
+"user/module/communication/USB/comm_usb.c"
+"user/module/communication/USB/port/usb_dc.c"
+"user/tasks/task_led1.c"
+"user/tasks/task_led2.c"
+"user/tasks/task_comm.c"
 "Middlewares/CherryUSB/core/usbd_core.c"
 "Middlewares/CherryUSB/class/cdc/usbd_cdc_acm.c"
+"Middlewares/FreeRTOS/FreeRTOS/Source/tasks.c"
+"Middlewares/FreeRTOS/FreeRTOS/Source/queue.c"
+"Middlewares/FreeRTOS/FreeRTOS/Source/list.c"
+"Middlewares/FreeRTOS/FreeRTOS/Source/timers.c"
+"Middlewares/FreeRTOS/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c"
+"Middlewares/FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_4.c"
 )
 
 set(DRIVER_SOURCES
@@ -71,6 +86,7 @@ set(USER_COMPILE_OPTIONS
     "-mfloat-abi=hard"
     "-g"
     "-O0"
+    "-DUSE_USB"
 )
 
 set(USER_LINK_OPTIONS
